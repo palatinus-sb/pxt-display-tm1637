@@ -67,6 +67,7 @@ namespace display {
             else if (this.pointFlag == false) pointData = 0;
 
             if (dispData == 0x7f) dispData = 0x00 + pointData;
+            else if (dispData == 0x3f) dispData = 0x3f + pointData;
             else dispData = TubeTab[dispData] + pointData;
 
             return dispData;
