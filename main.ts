@@ -77,39 +77,42 @@ namespace display {
          * @param dispData value of number
          */
         //% blockId=grove_tm1637_display_number block="%strip|show number|%dispData"
-        show(dispData: number) {
+        show(dispData: number, fillWithZeros = false) {
+            let def = 0x7f
+            if (fillWithZeros)
+                def = 0x3f
             if (dispData < 10) {
                 this.bit(dispData, 3);
-                this.bit(0x7f, 2);
-                this.bit(0x7f, 1);
-                this.bit(0x7f, 0);
+                this.bit(def, 2);
+                this.bit(def, 1);
+                this.bit(def, 0);
 
                 this.buf[3] = dispData;
-                this.buf[2] = 0x7f;
-                this.buf[1] = 0x7f;
-                this.buf[0] = 0x7f;
+                this.buf[2] = def;
+                this.buf[1] = def;
+                this.buf[0] = def;
             }
             else if (dispData < 100) {
                 this.bit(dispData % 10, 3);
                 this.bit((dispData / 10) % 10, 2);
-                this.bit(0x7f, 1);
-                this.bit(0x7f, 0);
+                this.bit(def, 1);
+                this.bit(def, 0);
 
                 this.buf[3] = dispData % 10;
                 this.buf[2] = (dispData / 10) % 10;
-                this.buf[1] = 0x7f;
-                this.buf[0] = 0x7f;
+                this.buf[1] = def;
+                this.buf[0] = def;
             }
             else if (dispData < 1000) {
                 this.bit(dispData % 10, 3);
                 this.bit((dispData / 10) % 10, 2);
                 this.bit((dispData / 100) % 10, 1);
-                this.bit(0x7f, 0);
+                this.bit(def, 0);
 
                 this.buf[3] = dispData % 10;
                 this.buf[2] = (dispData / 10) % 10;
                 this.buf[1] = (dispData / 100) % 10;
-                this.buf[0] = 0x7f;
+                this.buf[0] = def;
             }
             else {
                 this.bit(dispData % 10, 3);
@@ -149,7 +152,7 @@ namespace display {
         //% bitAddr.min=0 bitAddr.max=3
         //% advanced=true
         bit(dispData: number, bitAddr: number) {
-            if ((dispData == 0x7f) || ((dispData <= 9) && (bitAddr <= 3))) {
+            if ((dispData == 0x7f) || (dispData == 0x3f) || ((dispData <= 9) && (bitAddr <= 3))) {
                 let segData = 0;
 
                 segData = this.coding(dispData);
