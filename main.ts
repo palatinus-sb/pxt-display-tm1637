@@ -8,11 +8,9 @@ let TubeTab: number[] = [
 //% weight=10 color=#9F79EE icon="\uf108" block="Display"
 namespace display {
     /**
-     * Create a new driver Grove - 4-Digit Display
-     * @param clkPin value of clk pin number
-     * @param dataPin value of data pin number
+     * Create an interface for the TM1637 display
      */
-    //% blockId=grove_tm1637_create block="4-Digit Display at|%clkPin|and|%dataPin"
+    //% block
     export function createDisplay(clkPin: DigitalPin, dataPin: DigitalPin): TM1637 {
         let display = new TM1637()
 
@@ -69,12 +67,10 @@ namespace display {
 
             return dispData
         }
-
         /**
          * Show a 4 digits number on display
-         * @param dispData value of number
          */
-        //% blockId=grove_tm1637_display_number block="%strip|show number|%dispData"
+        //% block
         show(dispData: number, fillWithZeros = false) {
             let def = 0x7f
             if (fillWithZeros)
@@ -124,14 +120,11 @@ namespace display {
                 this.buf[0] = (dispData / 1000) % 10
             }
         }
-
         /**
-         * Set the brightness level of display at from 0 to 7
-         * @param level value of brightness level
+         * Show a 4 digits number on display
          */
-        //% blockId=grove_tm1637_set_display_level block="%strip|brightness level to|%level"
-        //% level.min=0 level.max=7
-        set(level: number) {
+        //% block
+        brightness(level: number) {
             this.brightnessLevel = level
 
             this.bit(this.buf[0], 0x00)
@@ -141,13 +134,9 @@ namespace display {
         }
 
         /**
-         * Show a single number from 0 to 9 at a specified digit of Grove - 4-Digit Display
-         * @param dispData value of number
-         * @param bitAddr value of bit number
+         * Show a single number from 0 to 9 at a specified digit of the display
          */
-        //% blockId=grove_tm1637_display_bit block="%strip|show single number|%dispData|at digit|%bitAddr"
-        //% dispData.min=0 dispData.max=9
-        //% bitAddr.min=0 bitAddr.max=3
+        //% block
         //% advanced=true
         bit(dispData: number, bitAddr: number) {
             if ((dispData == 0x7f) || (dispData == 0x3f) || ((dispData <= 9) && (bitAddr <= 3))) {
@@ -173,10 +162,9 @@ namespace display {
         }
 
         /**
-         * Turn on or off the colon point on Grove - 4-Digit Display
-         * @param pointEn value of point switch
+         * Turn on or off the colon point on the display
          */
-        //% blockId=grove_tm1637_display_point block="%strip|turn|%point|colon point"
+        //% block
         //% advanced=true
         point(b: boolean) {
             this.pointFlag = b
@@ -186,8 +174,7 @@ namespace display {
         /**
          * Clear the display
          */
-        //% blockId=grove_tm1637_display_clear block="%strip|clear"
-        //% advanced=true
+        //% block
         clear() {
             this.bit(0x7f, 0x00)
             this.bit(0x7f, 0x01)
